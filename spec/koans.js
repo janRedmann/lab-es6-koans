@@ -4,28 +4,36 @@ describe("`let` vs. `var`.", () => {
   it("the scope for `var` is not restricted to the block", () => {
     if (true) {
       /* use the correct keyword to initialize `varX` here */
+      var varX = true;
     }
-    // expect(varX).toBe(true);
+    expect(varX).toBe(true);
   });
 
   it("`let` restricts scope to inside the block", () => {
     /* initialize the variable `letX` */
     /* here ? */
+    let letX = true;
     if (true) {
       /* or here ? */
     }
-    // expect(letX).toBe(true);
+    expect(letX).toBe(true);
   });
 });
 
 describe("`const` is like `let` plus read-only. ", () => {
   it("primitives declared with `const` cannot be reassigned", () => {
     /*let or const? x = 0;*/
-    // expect(() => { x = 1; }).toThrow()
+    const x = 0;
+    expect(() => {
+      x = 1;
+    }).toThrow();
   });
   it("objects declared with `const` cannot be reassigned", () => {
     /*let or const? y = [1, 2, 3];*/
-    // expect(() => { y = [4, 5, 6]; }).toThrow()
+    const y = [1, 2, 3];
+    expect(() => {
+      y = [4, 5, 6];
+    }).toThrow();
   });
 
   it("objects declared with `const` can still be mutated", () => {
@@ -40,8 +48,9 @@ describe("`const` is like `let` plus read-only. ", () => {
 
   it("`const` scope leaks too", () => {
     /*`const`? notChangeable = 23;*/
+    const notChangeable = 23;
     if (true) {
-      // expect(notChangeable).toBe(23);
+      expect(notChangeable).toBe(23);
     }
   });
 });
@@ -49,34 +58,41 @@ describe("`const` is like `let` plus read-only. ", () => {
 describe("`string.includes()` finds string within another string. ", () => {
   it("returns `true` if a character is found in a string", () => {
     /* const char = ???? */
-    // expect('xyz'.includes(char)).toBe(true);
+    const char = "xyz";
+    expect("xyz".includes(char)).toBe(true);
   });
   it("returns `false` if character was not found", () => {
     /* const char = ???? */
-    // expect('xyz'.includes(char)).toBe(false);
+    const char = "xzy";
+    expect("xyz".includes(char)).toBe(false);
   });
   it("returns `true` if a string is found in a string", () => {
     /* const searchString = ???? */
-    // expect('Hello World'.includes(searchString)).toBe(true);
+    const searchString = "Hello World";
+    expect("Hello World".includes(searchString)).toBe(true);
   });
   it("returns `false` if string was not found", () => {
     /* const searchString = ???? */
-    // expect('Hello World'.includes(searchString)).toBe(false);
+    const searchString = " ";
+    expect("Hello World".includes(searchString)).toBe(false);
   });
 
   it("does not find `a` after position 1 in `abc`", () => {
     /* const position = ???? */
-    // expect('abc'.includes('a', position)).toBe(false);
+
+    const position = expect("abc".includes("a", position)).toBe(false);
   });
   it("even the position gets coerced", () => {
     /* const position = ???? */
-    // expect(typeof position).toBe("string")
-    // expect('abc'.includes('c', position)).toBe(true);
+    const position = "abc";
+    expect(typeof position).toBe("string");
+    expect("abc".includes("c", position)).toBe(true);
   });
   it("invalid positions get converted to 0`", () => {
     /* let position = ???? */
-    // expect(position).toBeUndefined()
-    // expect('abc'.includes('a', position)).toBe(true);
+
+    expect(position).toBeUndefined();
+    expect("abc".includes("a", position)).toBe(true);
   });
   it("negative numbers get converted to 0", () => {
     /* const position = ???? */
@@ -85,8 +101,9 @@ describe("`string.includes()` finds string within another string. ", () => {
   });
   it("NaN", () => {
     /* const position = ???? */
-    // expect(position).toBeNaN()
-    // expect('abc'.includes('a', position)).toBe(true);
+
+    expect(position).toBeNaN();
+    expect("abc".includes("a", position)).toBe(true);
   });
 });
 
@@ -94,7 +111,8 @@ describe("a template string, is wrapped in ` (backticks) instead of ' or \". ", 
   describe("by default, behaves like a normal string", function () {
     it("just surrounded by backticks", function () {
       /* let str = ?????? */
-      // expect(str).toEqual('like a string');
+      let str = `like a string`;
+      expect(str).toEqual("like a string");
     });
   });
 
@@ -163,45 +181,51 @@ describe("destructuring arrays makes shorter code. ", () => {
   it("extract value from array, e.g. extract 0 into x like so `let [x] = [0];`", () => {
     const arr = [1];
     /* let [???] = arr */
-    // expect(firstValue).toEqual(1);
+    let [firstValue] = [1];
+    expect(firstValue).toEqual(1);
   });
 
   it("swap two variables, in one operation", () => {
     let [x, y] = ["ax", "why"];
     /* [x, y] = [????, ????] */
-    // expect([x, y]).toEqual(["why", "ax"]);
+    [x, y] = [y, x];
+    expect([x, y]).toEqual(["why", "ax"]);
   });
 
   it("leading commas", () => {
     const all = ["ax", "why", "zet"];
-    const [z] = all;
-    // expect(z).toEqual('zet');
+    const [, , z] = all;
+    expect(z).toEqual("zet");
   });
 
   it("extract from nested arrays", () => {
     const user = [["Some", "One"], 23];
     /* const [firstName, surname, age] = user */
-
+    const [[firstName, surname], age] = user;
     const expected = "Some One = 23 years";
-    // expect(`${firstName} ${surname} = ${age} years`).toEqual(expected);
+    expect(`${firstName} ${surname} = ${age} years`).toEqual(expected);
   });
 
   it("chained assignments", () => {
     let c, d;
     /* let a, b = c, d = [1, 2] */
-    // expect([a, b, c, d]).toEqual([1, 2, 1, 2]);
+    let c, d;
+    let [a, b] = ([c, d] = [1, 2]);
+    expect([a, b, c, d]).toEqual([1, 2, 1, 2]);
   });
 });
 
 describe("destructuring also works on strings. ", () => {
   it("destructure every character", () => {
     /* let [????] = "abc" */
-    // expect([x, y, z]).toEqual(['a', 'b', 'c']);
+    let [x, y, z] = "abc";
+    expect([x, y, z]).toEqual(["a", "b", "c"]);
   });
 
   it("missing characters are undefined", () => {
     /* const [a, c] = "ab" */
-    // expect(c).toBeUndefined();
+    const [a, b, c] = "ab";
+    expect(c).toBeUndefined();
   });
 });
 
@@ -209,30 +233,39 @@ describe("destructuring objects. ", () => {
   it("is simple", () => {
     const obj = { x: 1 };
     /* const {????} = obj */
-    // expect(x).toEqual(1);
+    const { x } = obj;
+    expect(x).toEqual(1);
   });
 
   describe("nested", () => {
     it("multiple objects", () => {
       const magic = { first: 23, second: 42 };
       /* const first, second  = ?????? */
-      // expect(first).toEqual(23);
-      // expect(second).toEqual(42);
+      const {
+        magic: { second },
+      } = { magic };
+      expect(first).toEqual(23);
+      expect(second).toEqual(42);
     });
     it("object and array", () => {
       /* const { z: [????] } = { z: [23, 42] } */
-      // expect(x).toEqual(42);
+      const {
+        z: [, x],
+      } = { z: [23, 42] };
+      expect(x).toEqual(42);
     });
     it("array and object", () => {
       /* const [????] = [null, [{ env: "browser", lang: "ES6" }]] */
-      // expect(lang).toEqual('ES6');
+      const [, [{ lang }]] = [null, [{ env: "browser", lang: "ES6" }]];
+      expect(lang).toEqual("ES6");
     });
   });
 
   describe("interesting", () => {
     it("missing refs become undefined", () => {
       /* const {????} = { x: 1, y: 2 } */
-      // expect(z).toBeUndefined();
+      const { z } = { x: 1, y: 2 };
+      expect(z).toBeUndefined();
     });
   });
 });
@@ -240,42 +273,49 @@ describe("destructuring objects. ", () => {
 describe("destructuring can also have default values. ", () => {
   it("for an empty array", () => {
     /* const [????] = [] */
-    // expect(a).toEqual(1);
+    const a = [];
+    expect(a).toEqual(1);
   });
 
   it("for a missing value", () => {
     /* const [a, ????, c] = [1, , 3] */
-    // expect(b).toEqual(2);
+    const [, b = 2, c] = [1, , 3];
+
+    expect(b).toEqual(2);
   });
 
   it("in an object", () => {
     /* const { a, ???? } = { a: 1 } */
-    // expect(b).toEqual(2);
+    const { a, b = 2 } = { a: 1 };
+    expect(b).toEqual(2);
   });
 
   it("if the value is undefined", () => {
     /* const { a, ???? } = { a: 1, b: undefined } */
-    // expect(b).toEqual(2);
+    expect(b).toEqual(2);
   });
 
   it("also a string works with defaults", () => {
     /* const [a, ????] = "1" */
-    // expect(a).toEqual("1");
-    // expect(b).toEqual(2);
+    const [a, b = 2] = "1";
+
+    expect(a).toEqual("1");
+    expect(b).toEqual(2);
   });
 });
 
 describe("arrow functions. ", () => {
   it("are shorter to write", function () {
     let func = () => {
-      /*........*/
+      return "I am func";
     };
-    // expect(func()).toBe("I am func");
+    expect(func()).toBe("I am func");
   });
 
   it("a single expression, without curly braces returns too", function () {
     /*let func = () => .........;*/
-    // expect(func()).toBe('I return too');
+    let func = () => "i return too";
+    expect(func()).toBe("I return too");
   });
 
   it("one parameter can be written without parens", () => {
@@ -433,7 +473,7 @@ describe("class creation", () => {
 
   it("special method is `constructor`", function () {
     class User {
-      constructor(id) { }
+      constructor(id) {}
     }
 
     const user = new User(42);
@@ -441,7 +481,7 @@ describe("class creation", () => {
   });
 
   it("defining a method is simple", function () {
-    class User { }
+    class User {}
 
     const notATester = new User();
     // expect(notATester.writesTests()).toBe(false);
@@ -452,7 +492,7 @@ describe("class creation", () => {
       wroteATest() {
         this.everWroteATest = true;
       }
-      isLazy() { }
+      isLazy() {}
     }
 
     const tester = new User();
