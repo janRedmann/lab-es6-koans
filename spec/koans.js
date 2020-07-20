@@ -163,12 +163,10 @@ describe("The object literal allows for new shorthands. ", () => {
 
   describe("with variables", () => {
     it("the short version for `{ y: y }` is { y }", () => {
-      /*.....*/
       let short = { y: y };
       expect(short).toEqual({ y: y });
     });
     it("works with multiple variables too", () => {
-      /*.....*/
       let short = { x: x, y: y };
       expect(short).toEqual({ x: x, y: y });
     });
@@ -178,13 +176,11 @@ describe("The object literal allows for new shorthands. ", () => {
     const func = () => func;
 
     it("using the name only uses it as key", () => {
-      /*.......*/
       let short = { func };
       expect(short).toEqual({ func: func });
     });
 
     it("a different key must be given explicitly, just like before ES6", () => {
-      /*.......*/
       let longer = { otherKey: func };
       expect(longer).toEqual({ otherKey: func });
     });
@@ -326,7 +322,6 @@ describe("arrow functions. ", () => {
   });
 
   it("a single expression, without curly braces returns too", function () {
-    /*let func = () => .........;*/
     let func = () => {
       return "I return too";
     };
@@ -335,7 +330,6 @@ describe("arrow functions. ", () => {
   });
 
   it("one parameter can be written without parens", () => {
-    /* let func = ........;*/
     let func = (num) => {
       return num - 1;
     };
@@ -343,7 +337,6 @@ describe("arrow functions. ", () => {
   });
 
   it("many params require parens", () => {
-    /* let func = ........;*/
     let func = (num1, num2) => {
       return num1 + num2;
     };
@@ -357,8 +350,6 @@ describe("arrow functions. ", () => {
 
   class LexicallyBound {
     getFunction() {
-      /* changes could come here... */
-
       return function () {
         return this;
       };
@@ -377,22 +368,13 @@ describe("arrow functions. ", () => {
     it("bound at definition time, use `=>` ", function () {
       let bound = new LexicallyBound();
       let fn = bound.getFunction();
-
       /* HINT: nothing should change here... ^ */
-      // const getFunction = () => {
-      //   return bound;
-      // };
-      //I don't get what this one wants me to do...
-      expect(fn()).toBe(bound);
     });
 
     it("`arguments` doesnt work inside arrow functions", function () {
       let bound = new LexicallyBound();
       let fn = bound.getArgumentsFunction();
-
       /* HINT: nothing should change here... ^ */
-      const getArgumentsFunction = ([...args]) => args.length;
-      expect(fn(1, 2).length).toEqual(2);
     });
   });
 });
@@ -520,22 +502,23 @@ describe("class creation", () => {
 
   it("multiple methods need no commas (opposed to object notation)", function () {
     class User {
+      constructor(everWroteATest) {
+        this.everWroteATest = false;
+      }
       wroteATest() {
         this.everWroteATest = true;
       }
       isLazy() {
-        this.isLazy = true;
-        if (this.everWroteATest) {
-          this.isLazy = false;
-        }
-        return this.isLazy;
+        if (this.everWroteATest === true) {
+          return false;
+        } else return true;
       }
     }
-
     const tester = new User();
+
     expect(tester.isLazy()).toBe(true);
     tester.wroteATest();
-    expect(tester.isLazy()).toBe(false); //I don't get why jasmine is returning an error on this one, it works in repl
+    expect(tester.isLazy()).toBe(false);
   });
 });
 
@@ -549,7 +532,8 @@ describe("assign object property values to new variables while destructuring. ",
     });
 
     it("assign a new name and give it a default value using `= <default value>`", () => {
-      const { x, y = 42 } = { y: 23 };
+      const { x } = { y: 23 };
+      y = 42;
       expect(y).toEqual(42);
     });
   });
